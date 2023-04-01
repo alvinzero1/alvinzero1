@@ -1,51 +1,51 @@
 Note on Vue learning
 
+- [Essentials](#essentials))
+- [Components In Depth](#components-in-depth)
 - [from Tutorial](#from-tutorial)
 
 ---
+
+#### note on start keys
 * npm init vue@latest
 * cd <vue-project>
 * npm install
 * npm run dev
 * `http://localhost:5173/`
 
-## vuejs installed
+[top]: topOfThePage
+####  reference notes
 
-
-10:01 am 30/3/2023
-
-installed Node.js node-v18.15.0-x64.msi
+* installed Node.js node-v18.15.0-x64.msi
 , with Chocolatey (should not install, for python & visualStudio)
+* reference:
+	- https://vuejs.org/guide/introduction.html#what-is-vue
+	- https://www.tutorialspoint.com/vuejs/vuejs_tutorial.pdf
+	- https://vuejs.org/guide/quick-start.html#creating-a-vue-application
+	- https://www.tutorialspoint.com/nodejs/nodejs_environment_setup.htm
+* Verify installation:
+	- Executing a File hello.js
+	``` js
+	/* Hello, World! program in node.js */
+	console.log("Hello, World!")
+	```
+	- execute
+	``` console
+	AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/vueWk28/230330WhatIs
+	$ node hello.js
+	Hello, World!
 
-ref: https://vuejs.org/guide/introduction.html#what-is-vue
+	AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/vueWk28/230330WhatIs
+	$ npm --version
+	9.5.0
 
-ref: https://www.tutorialspoint.com/vuejs/vuejs_tutorial.pdf
+	AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/vueWk28/230330WhatIs
+	$ node --version
+	v18.15.0
+	```
 
-ref: https://vuejs.org/guide/quick-start.html#creating-a-vue-application
 
-ref: https://www.tutorialspoint.com/nodejs/nodejs_environment_setup.htm
-
-Verify installation: Executing a Filehello.js
-``` js
-/* Hello, World! program in node.js */
-console.log("Hello, World!")
-```
-execute
-``` console
-AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/vueWk28/230330WhatIs
-$ node hello.js
-Hello, World!
-
-AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/vueWk28/230330WhatIs
-$ npm --version
-9.5.0
-
-AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/vueWk28/230330WhatIs
-$ node --version
-v18.15.0
-
-```
-install vue
+### Quick Start
 ``` console
 npm init vue@latest
 ```
@@ -93,7 +93,7 @@ npm notice
 ```
 - show `You did it!` in browser, `http://localhost:5173/`
 
-
+---
 ### default code
 index.html
 ``` html
@@ -173,13 +173,14 @@ header {
 ```
 
 
----
-### Single-File Components
+
+### Introduction
+#### Single-File Components
 https://vuejs.org/guide/introduction.html#single-file-components
 
 just revised App.vue
 #### Options API
-``` js
+``` vue
 <script>
   export default {
     // Properties returned from data() become reactive state
@@ -208,7 +209,7 @@ just revised App.vue
 </script>
 ```
 #### Composition API
-``` js
+``` vue
 <script setup>
 import { ref, onMounted } from 'vue'
 
@@ -312,7 +313,158 @@ Arguments
 ```
 
 ---
-Reactive Proxy vs. Original
+
+## Essentials
+### Reactivity Fundamentals	
+Declaring Reactive State
+``` js
+import { reactive } from 'vue'
+
+const state = reactive({ count: 0 })	
+```
+ref: https://vuejs.org/guide/extras/reactivity-in-depth.html
+
+To use reactive state in a component's template, declare and return them from a component's setup() function:
+``` js
+import { reactive } from 'vue'
+
+export default {
+  // `setup` is a special hook dedicated for composition API.
+  setup() {
+    const state = reactive({ count: 0 })
+
+    // expose the state to the template
+    return {
+      state
+    }
+  }
+}
+```
+``` html
+<div>{{ state.count }}</div>
+```
+Similarly, we can declare functions that mutate reactive state in the same scope and expose them as methods alongside the state:
+``` js
+import { reactive } from 'vue'
+
+export default {
+  setup() {
+    const state = reactive({ count: 0 })
+
+    function increment() {
+      state.count++
+    }
+
+    // don't forget to expose the function as well.
+    return {
+      state,
+      increment
+    }
+  }
+}
+```
+``` html
+<button @click="increment">
+  {{ state.count }}
+</button>
+```
+#### `<script setup>`
+using Single-File Components (SFCs), we can greatly simplify the usage with `<script setup>`:
+``` js
+<script setup>
+import { reactive } from 'vue'
+
+const state = reactive({ count: 0 })
+
+function increment() {
+  state.count++
+}
+</script>
+
+<template>
+  <button @click="increment">
+    {{ state.count }}
+  </button>
+</template>
+```
+#### Deep Reactivity
+In Vue, state is deeply reactive by default. This means you can expect changes to be detected even when you mutate nested objects or arrays:
+``` js
+import { reactive } from 'vue'
+
+const obj = reactive({
+  nested: { count: 0 },
+  arr: ['foo', 'bar']
+})
+
+function mutateDeeply() {
+  // these will work as expected.
+  obj.nested.count++
+  obj.arr.push('baz')
+}
+```
+#### Reactive Proxy vs. Original (Composition Api)
+
+#### Reactive Variables with `ref()`
+`ref()` takes the argument and returns it wrapped within a ref object with a .value property:
+``` js
+import { ref } from 'vue'
+
+const count = ref(0)
+
+console.log(count) // { value: 0 }
+console.log(count.value) // 0
+
+count.value++
+console.log(count.value) // 1
+```
+A ref containing an object value can reactively replace the entire object:
+``` js
+const objectRef = ref({ count: 0 })
+
+// this works reactively
+objectRef.value = { count: 1 }
+```
+Refs can also be passed into functions or destructured from plain objects without losing reactivity:
+``` js
+const obj = {
+  foo: ref(1),
+  bar: ref(2)
+}
+
+// the function receives a ref
+// it needs to access the value via .value but it
+// will retain the reactivity connection
+callSomeFunction(obj.foo)
+
+// still reactive
+const { foo, bar } = obj
+```
+#####	Ref Unwrapping in Templates
+``` js
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+function increment() {
+  count.value++
+}
+</script>
+
+<template>
+  <button @click="increment">
+    {{ count }} <!-- no .value needed -->
+  </button>
+</template>
+```
+	
+	
+
+---
+#### Reactive Proxy vs. Original (Options Api)
+	https://vuejs.org/guide/essentials/reactivity-fundamentals.html#reactive-proxy-vs-original-1
+	
 ``` js
 export default {
   data() {
@@ -328,7 +480,8 @@ export default {
   }
 }
 ```
-
+	
+---
 Declaring Methods
 ``` js
 export default {
@@ -352,7 +505,7 @@ export default {
 <button @click="increment">{{ count }}</button>
 ```
 
-Deep Reactivity
+Deep Reactivity (Options Api)
 ``` js
 export default {
   data() {
@@ -373,71 +526,65 @@ export default {
 }
 ```
 
-Computed Properties
+### Computed Properties
 ``` js
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  },
-  computed: {
-    // a computed getter
-    publishedBooksMessage() {
-      // `this` points to the component instance
-      return this.author.books.length > 0 ? 'Yes' : 'No'
-    }
-  }
-}
+<script setup>
+import { reactive, computed } from 'vue'
+
+const author = reactive({
+  name: 'John Doe',
+  books: [
+    'Vue 2 - Advanced Guide',
+    'Vue 3 - Basic Guide',
+    'Vue 4 - The Mystery'
+  ]
+})
+
+// a computed ref
+const publishedBooksMessage = computed(() => {
+  return author.books.length > 0 ? 'Yes' : 'No'
+})
+</script>
+
+<template>
+  <p>Has published books:</p>
+  <span>{{ publishedBooksMessage }}</span>
+</template>
 ```
 Writable Computed
 ``` js
-export default {
-  data() {
-    return {
-      firstName: 'John',
-      lastName: 'Doe'
-    }
-  },
-  computed: {
-    fullName: {
-      // getter
-      get() {
-        return this.firstName + ' ' + this.lastName
-      },
-      // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        [this.firstName, this.lastName] = newValue.split(' ')
-      }
-    }
-  }
+<script setup>
+import { ref, computed } from 'vue'
 
-  mounted() {
-    console.log(`>>>> ${this.fullName = 'Teresa Choo'}  `)
+const firstName = ref('John')
+const lastName = ref('Doe')
+
+const fullName = computed({
+  // getter
+  get() {
+    return firstName.value + ' ' + lastName.value
+  },
+  // setter
+  set(newValue) {
+    // Note: we are using destructuring assignment syntax here.
+    [firstName.value, lastName.value] = newValue.split(' ')
   }
-}
+})
+</script>
 ```
+	
+---
+### Class and Style Bindings
 Binding to Objects
 ``` js
-data() {
-  return {
-    activeColor: 'red',
-    fontSize: 30
-  }
-}
+const activeColor = ref('red')
+const fontSize = ref(30)
 ```
 ``` html
 <div :style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+```
 
-Conditional Rendering
+### Conditional Rendering
 ``` js
   <button @click="awesome = !awesome">Toggle</button>
   <h1 v-if="awesome">Vue is awesome!</h1>
@@ -446,7 +593,7 @@ Conditional Rendering
   <h1 v-show="ok">Hello!</h1>
 ```
 
-List Rendering
+### List Rendering
 ``` js
 <li v-for="{ message } in items">
   {{ message }}
@@ -458,7 +605,23 @@ List Rendering
 </li>
 ```
 
-Form input Bindings
+### Form input Bindings
+``` js
+	const checkedNames = ref([])
+```
+``` html
+<div>Checked names: {{ checkedNames }}</div>
+
+<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+<label for="jack">Jack</label>
+
+<input type="checkbox" id="john" value="John" v-model="checkedNames">
+<label for="john">John</label>
+
+<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+<label for="mike">Mike</label>
+```
+Options Api
 ``` js
 ...
   data() { return {
@@ -468,10 +631,34 @@ Form input Bindings
   {{ newItem2 }}
 </template>
 ```
-Lifecycle Diagram
+
+### Lifecycle Diagram
 [https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram]
 
-Watchers
+### Watchers
+``` js
+const x = ref(0)
+const y = ref(0)
+
+// single ref
+watch(x, (newX) => {
+  console.log(`x is ${newX}`)
+})
+
+// getter
+watch(
+  () => x.value + y.value,
+  (sum) => {
+    console.log(`sum of x + y is: ${sum}`)
+  }
+)
+
+// array of multiple sources
+watch([x, () => y.value], ([newX, newY]) => {
+  console.log(`x is ${newX} and y is ${newY}`)
+})
+```
+Option Api
 ``` js
   watch: {
     // whenever question changes, this function will run
@@ -483,31 +670,33 @@ Watchers
   },
 ```
 
-Template **Refs**, Accessing the Refs
+### Template **Refs**, Accessing the Refs
 ``` html
-<script> export default {
-  mounted() {
-    this.$refs.input.focus()
-  }
-} </script>
+<script setup>
+import { ref, onMounted } from 'vue'
+
+// declare a ref to hold the element reference
+// the name must match template ref value
+const input = ref(null)
+
+onMounted(() => {
+  input.value.focus()
+})
+</script>
 
 <template>
   <input ref="input" />
 </template>
 ```
-## Components Basics
+
+### Components Basics
 ref: https://vuejs.org/guide/essentials/component-basics.html
-### Using a Component
+	
+#### Using a Component
 App.vue
 ``` js
-<script>
+<script setup>
 import ButtonCounter from './ButtonCounter.vue'
-  
-export default {
-  components: {
-    ButtonCounter
-  }
-}
 </script>
 
 <template>
@@ -519,14 +708,10 @@ export default {
 ```
 ButtonCounter.vue
 ``` js
-<script>
-export default {
-  data() {
-    return {
-      count: 0
-    }
-  }
-}
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
 </script>
 
 <template>
@@ -536,41 +721,35 @@ export default {
 </template>
 ```
 
----
-### Dynamic Components
+#### Dynamic Components
 App.vue
 ``` js
-<script>
+<script setup>
 import Home from './Home.vue'
 import Posts from './Posts.vue'
 import Archive from './Archive.vue'
-  
-export default {
-  components: {
-    Home,
-    Posts,
-    Archive
-  },
-  data() {
-    return {
-      currentTab: 'Home',
-      tabs: ['Home', 'Posts', 'Archive']
-    }
-  }
+import { ref } from 'vue'
+ 
+const currentTab = ref('Home')
+
+const tabs = {
+  Home,
+  Posts,
+  Archive
 }
 </script>
 
 <template>
   <div class="demo">
     <button
-       v-for="tab in tabs"
+       v-for="(_, tab) in tabs"
        :key="tab"
        :class="['tab-button', { active: currentTab === tab }]"
        @click="currentTab = tab"
      >
       {{ tab }}
     </button>
-	  <component :is="currentTab" class="tab"></component>
+	  <component :is="tabs[currentTab]" class="tab"></component>
   </div>
 </template>
 <style> ... </stype>
@@ -599,23 +778,19 @@ Archive.vue
   </div>
 </template>
 ```
----
----
 
-#### Props
+[:point_up: Top](#top)
+	
+---
+## Components In Depth
+### Props
 Binding Multiple Properties Using an Object.
 
 If you want to pass all the properties of an object as props, you can use v-bind without an argument (v-bind instead of :prop-name). For example, given a post object:
 ``` js
-export default {
-  data() {
-    return {
-      post: {
-        id: 1,
-        title: 'My Journey with Vue'
-      }
-    }
-  }
+const post = {
+  id: 1,
+  title: 'My Journey with Vue'
 }
 ```
 The following template:
@@ -628,23 +803,17 @@ Will be equivalent to:
 ```
 I tested by adding `ref="title"` in <>, and `console.log(this.$refs.title)` at mounted()
 
----
+
 ### Component v-model
 `v-model` can be used on a *component* to implement a two-way binding.
 
 App.vue
 ``` js
-<script>
+<script setup>
+import { ref } from 'vue'
 import CustomInput from './CustomInput.vue'
-
-export default {
-  components: { CustomInput },
-  data() {
-    return {
-      message: 'hello'
-    }
-  }
-}
+  
+const message = ref('hello')
 </script>
 
 <template>
@@ -653,11 +822,9 @@ export default {
 ```
 CustomInput.vue
 ``` js
-<script>
-export default {
-  props: ['modelValue'],
-  emits: ['update:modelValue']
-}
+<script setup>
+defineProps(['modelValue'])
+defineEmits(['update:modelValue'])
 </script>
 
 <template>
@@ -674,18 +841,12 @@ By default, `v-model` on a component uses `modelValue` as the prop and `update:m
 #### Multiple `v-model` bindings
 App.vue
 ``` js
-<script>
+<script setup>
+import { ref } from 'vue'
 import UserName from './UserName.vue'
 
-export default {
-  components: { UserName },
-  data() {
-    return {
-      first: 'John',
-      last: 'Doe'
-    }
-  }
-}
+const first = ref('John')
+const last = ref('Doe')
 </script>
 
 <template>
@@ -698,14 +859,13 @@ export default {
 ```
 Username.vue
 ``` js
-<script>
-export default {
-  props: {
-	  firstName: String,
-  	lastName: String
-	},
-  emits: ['update:firstName', 'update:lastName']
-}
+<script setup>
+defineProps({
+  firstName: String,
+  lastName: String
+})
+
+defineEmits(['update:firstName', 'update:lastName'])
 </script>
 
 <template>
@@ -741,14 +901,8 @@ fallthrough attributes will be automatically added to the root element's attribu
 #### Fallback Content
 App.vue
 ``` js
-<script>
+<script setup>
 import SubmitButton from './SubmitButton.vue'
-  
-export default {
-  components: {
-    SubmitButton
-  }
-}
 </script>
 
 <template>
@@ -773,14 +927,8 @@ SubmitButton.vue
 #### Named Slots​
 App.vue
 ``` js
-<script>
+<script setup>
 import BaseLayout from './BaseLayout.vue'
-  
-export default {
-  components: {
-    BaseLayout
-  }
-}
 </script>
 
 <template>
@@ -826,29 +974,20 @@ BaseLayout.vue
 ```
 
 ### Provide / Inject
-#### Inject, ​Working with Reactivity
+#### Inject, Working with Reactivity
 * To inject data provided by an ancestor component, use the inject option:
 * In order to make injections reactively linked to the provider, we need to provide a computed property using the computed() function:
 
 App.vue
 ``` js
-<script>
+<script setup>
+import { ref, provide } from 'vue'
 import Child from './Child.vue'
-import { computed } from 'vue'
 
-export default {
-  components: { Child },
-  data() {
-    return {
-      message: 'hello'
-    }
-  },
-  provide() {
-    return {
-      message: computed(() => this.message)
-    }
-  }
-}
+// by providing a ref, the GrandChild
+// can react to changes happening here.
+const message = ref('hello')
+provide('message', message)
 </script>
 
 <template>
@@ -858,14 +997,8 @@ export default {
 ```
 Child.vue
 ``` js
-<script>
+<script setup>
 import GrandChild from './GrandChild.vue'
-
-export default {
-  components: {
-    GrandChild
-  }
-}
 </script>
 
 <template>
@@ -874,10 +1007,10 @@ export default {
 ```
 GrandChild.vue
 ``` js
-<script>
-export default {
-  inject: ['message']
-}
+<script setup>
+import { inject } from 'vue'
+
+const message = inject('message')
 </script>
 
 <template>
@@ -892,38 +1025,30 @@ export default {
 ### KeepAlive
 App.vue
 ``` js
-<script>
+<script setup>
+import { shallowRef } from 'vue'
 import CompA from './CompA.vue'
 import CompB from './CompB.vue'
-  
-export default {
-  components: { CompA, CompB },
-  data() {
-    return {
-      current: 'CompA'
-    }
-  }
-}
+
+const current = shallowRef(CompA)
 </script>
 
 <template>
   <div class="demo">
-    <label><input type="radio" v-model="current" value="CompA" /> A</label>
-    <label><input type="radio" v-model="current" value="CompB" /> B</label>
+    <label><input type="radio" v-model="current" :value="CompA" /> A</label>
+    <label><input type="radio" v-model="current" :value="CompB" /> B</label>
     <KeepAlive>
       <component :is="current"></component>
-    </KeepAli
+    </KeepAlive>
+  </div>
+</template>
 ```
 CompA.vue
 ``` js
-<script>
-export default {
-  data() {
-    return {
-      count: 0
-    }
-  }
-}
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
 </script>
 
 <template>
@@ -934,16 +1059,10 @@ export default {
 ```
 CompB.vue
 ``` js
-<script>
-export default {
-  data() {
-    return {
-      msg: ''
-    }
-  }
-}
+<script setup>
+import { ref } from 'vue'
+const msg = ref('')
 </script>
-
 
 <template>
   <p>Current component: B</p>
@@ -971,7 +1090,8 @@ export default {
 ### Routing
 App.vue
 ``` js
-<script>
+<script setup>
+import { ref, computed } from 'vue'
 import Home from './Home.vue'
 import About from './About.vue'
 import NotFound from './NotFound.vue'
@@ -981,23 +1101,15 @@ const routes = {
   '/about': About
 }
 
-export default {
-  data() {
-    return {
-      currentPath: window.location.hash
-    }
-  },
-  computed: {
-    currentView() {
-      return routes[this.currentPath.slice(1) || '/'] || NotFound
-    }
-  },
-  mounted() {
-    window.addEventListener('hashchange', () => {
-		  this.currentPath = window.location.hash
-		})
-  }
-}
+const currentPath = ref(window.location.hash)
+
+window.addEventListener('hashchange', () => {
+  currentPath.value = window.location.hash
+})
+
+const currentView = computed(() => {
+  return routes[currentPath.value.slice(1) || '/'] || NotFound
+})
 </script>
 
 <template>
@@ -1028,18 +1140,22 @@ NotFound.vue
 
 ### State Management
 #### Simple State Management with Reactivity API
+App.vue
+``` js
+<script setup>
+import ComponentA from './ComponentA.vue'
+import ComponentB from './ComponentB.vue'
+</script>
+
+<template>
+  <ComponentA />
+  <ComponentB />
+</template>
+```
 ComponentA.vue
 ``` js
-<script>
+<script setup>
 import { store } from './store.js'
-
-export default {
-  data() {
-    return {
-      store
-    }
-  }
-}
 </script>
 
 <template>
@@ -1071,10 +1187,11 @@ ref: https://vuejs.org/guide/extras/render-function.html
 
 ### Vue and Web Components
 
----
+
+[:point_up: Top](#top)
 
 
-
+---	  
 ## from Tutorial
 The above example demonstrates the two core features of Vue:
 
@@ -1273,7 +1390,7 @@ function removeTodo(todo) {
 </template>
 ```
 Tutorial 8, Computed Property
-``` vue
+``` js
 ...
 const filteredTodos = computed(() => {
   return hideCompleted.value
@@ -1303,7 +1420,7 @@ onMounted(() => {
 ```
 
 Tutorial 10, Watchers
-``` vue
+``` js
 import { ref, watch } from 'vue'
 
 const count = ref(0)
@@ -1349,7 +1466,7 @@ const props = defineProps({
 </template>
 ```
 Tutorial 13, Emits
-``` vue
+``` html
 ...
 <template>
   <ChildComp @response="(msg) => childMsg = msg" />
@@ -1406,6 +1523,6 @@ h1 {
 ```
 
 ---
-
-
+[:point_up: Top](#top)
+[:top: Top](#top)
 ---
