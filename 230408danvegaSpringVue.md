@@ -51,15 +51,19 @@ RawContent        : HTTP/1.1 200
 ### Vue
 * Generate project to `/src/frontend`
 * Open new bash terminal
-    [VueCli](https://cli.vuejs.org/) 
-    ``` console
-    PS ...\fsjava\src> npm install -g @vue/cli
+* Check vue version `vue --version`
+	* if not install
+	``` console
+	PS ...\fsjava\src> npm install -g @vue/cli
+	```
+	* [VueCli](https://cli.vuejs.org/) 
+* Create vue
+	``` console
+	PS ...\fsjava\src> vue create frontend
 
-    PS ...\fsjava\src> vue create frontend
-
-    $ cd frontend
-    $ npm run serve
-    ```
+	$ cd frontend
+	$ npm run serve
+	    ```
 * stop Spring server and vue server
 
 * Revise
