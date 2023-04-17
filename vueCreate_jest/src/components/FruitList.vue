@@ -8,6 +8,11 @@ const fruits = ref(["apple", "banana", "orange"])
 const numFruits = computed(() => {
   return fruits.value.length
 })
+
+function addFruit(fruit) {
+  fruits.value.push(fruit)
+}
+
 </script>
 
 <template>
