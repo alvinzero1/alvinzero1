@@ -11,10 +11,20 @@ function getJson() {
     idText.value = await (await fetch(url)).json()
   })
 }
+
+const someString = ref(" ... >>")
+function chgSome() {
+  someString.value = "someString"
+}
+
+function sum(a,b) {
+  return a + b;
+}
+
 </script>
 <template>
   <div>
-    <button @click="getJson">get JSON</button>
+    <button id="testButton" @click="getJson">get JSON</button>
 
     <div>
       ID: {{ idText.id }}
