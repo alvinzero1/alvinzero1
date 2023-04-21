@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
+import TypeMe from './TypeMe.vue'
 
 const API_URL = `/api/messages/json`
 const idText = ref([])
@@ -39,4 +40,6 @@ function sum(a,b) {
       Email: {{ idText.emails }}
     </div>
   </div>
+
+<TypeMe />
 </template>
