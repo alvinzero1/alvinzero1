@@ -482,5 +482,136 @@ $ docker run zero1alvin/figlet
 |_| |_|\___|_|_|\___/  |____/ \___/ \___|_|\_\___|_|  (_)
 ```
 
+---
+## Deployment
+### docker images -a
+[1:18:00]
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~
+$ docker images -a
+REPOSITORY               TAG       IMAGE ID       CREATED        SIZE
+figlet                   latest    988208f0234a   6 hours ago    378MB
+zero1alvin/figlet        latest    988208f0234a   6 hours ago    378MB
+fedora                   latest    83a840c3b816   2 days ago     190MB
+postgres                 latest    ceccf204404e   11 days ago    379MB
+docker/getting-started   latest    3e4394f6b72f   4 months ago   47MB
+jpetazzo/clock           latest    7a8965d6553e   2 years ago    1.23MB
+```
+### docker image prune
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~
+$ docker image prune
+WARNING! This will remove all dangling images.
+Are you sure you want to continue? [y/N] y
+Total reclaimed space: 0B
+```
+### docker container prune
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~
+$ docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+807ea9d1cf2c82420451301622e90b2bfb6923dc3af465827f9fdea25beca488
+d141c13cf50dfd2809a52173a9f312a35ef1bb531f409648a5f1958ead57b751
+
+Total reclaimed space: 1.093kB
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~
+```
+
+[1:45:00] 
+- docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres
+
+### pip
+``` console
+$ # comments
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ pip
+
+Usage:
+  pip <command> [options]
+
+Commands:
+  install                     Install packages.
+  download                    Download packages.
+  uninstall                   Uninstall packages.
+  freeze                      Output installed packages in requirements format.
+  inspect                     Inspect the python environment.
+  list                        List installed packages.
+  show                        Show information about installed packages.
+  check                       Verify installed packages have compatible dependencies.
+  config                      Manage local and global configuration.
+  search                      Search PyPI for packages.
+  cache                       Inspect and manage pip's wheel cache.
+  index                       Inspect information available from package indexes.
+  wheel                       Build wheels from your requirements.
+  hash                        Compute hashes of package archives.
+  completion                  A helper command used for command completion.
+  debug                       Show information useful for debugging.
+  help                        Show help for commands.
+
+General Options:
+  -h, --help                  Show help.
+  --debug                     Let unhandled exceptions propagate outside the main
+                              subroutine, instead of logging them to stderr.
+  ...
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ pip freeze
+```
+#### postgres
+- DockerHub
+- https://hub.docker.com/_/postgres/
+
+``` console
+$ docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres
+Unable to find image 'postgres:latest' locally
+latest: Pulling from library/postgres
+26c5c85e47da: Pull complete
+...
+Status: Downloaded newer image for postgres:latest
+807ea9d1cf2c82420451301622e90b2bfb6923dc3af465827f9fdea25beca488
+```
+ref
+- postico
+- docker awesome-compose
+
+### docker compose
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker compose --help
+
+Usage:  docker compose [OPTIONS] COMMAND
+
+Docker Compose
+
+Options:
+      --ansi string                Control when to print ANSI control
+                                   characters ("never"|"always"|"auto")
+                                   (default "auto")
+      --compatibility              Run compose in backward compatibility mode
+      --env-file stringArray       Specify an alternate environment file.
+  -f, --file stringArray           Compose configuration files
+      --parallel int               Control max parallelism, -1 for
+                                   unlimited (default -1)
+      --profile stringArray        Specify a profile to enable
+      --project-directory string   Specify an alternate working directory
+                                   (default: the path of the, first
+                                   specified, Compose file)
+  -p, --project-name string        Project name
+
+Commands:
+  build       Build or rebuild services
+  ...
+
+Run 'docker compose COMMAND --help' for more information on a command.
+```
+
+[2:18:00]
+ref for deployment
+- docker.com > Deploying Docker containers on Azure
+- Microsoft Azure
 
 ---
