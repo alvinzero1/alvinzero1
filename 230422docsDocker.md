@@ -1,7 +1,8 @@
 ## docs.docker.com
-ref: hub.docker.com
 
 This texts was ref from https://youtu.be/gAGEar5HQoU off  https://docs.docker.com/
+
+Pre: Installed `Docker Desktop` and login to `hub.docker.com`
 
 #### `wsl --update`
 if alert to update newer WSL kernel version.
@@ -13,8 +14,9 @@ C:\Users\AlvinNg>wsl --update
 Installing: Windows Subsystem for Linux
 Windows Subsystem for Linux has been installed.
 ```
-#### docker/getting-started
+### docker/getting-started
 google> dockerhub getting-started
+#### docker run -d -p 80:80 docker/getting-started
 ``` console
 C:\Users\AlvinNg\zero1Wk32>docker run -d -p 80:80 docker/getting-started
 Unable to find image 'docker/getting-started:latest' locally
@@ -64,7 +66,6 @@ Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 ``` console
 C:\Users\AlvinNg\zero1Wk32>docker run fedora echo hello world
 hello world
-C:\Users\AlvinNg\zero1Wk32>
 ```
 Goto to Docker Desktop > Containers> fedora's Name
 - `2023-04-22 14:38:45 hello world` shown at `Docker Desktop` too.
@@ -187,6 +188,9 @@ C:\Users\AlvinNg\zero1Wk32>docker --help
 ...
   ps          List containers
 ...
+```
+### docker ps
+``` console
 C:\Users\AlvinNg\zero1Wk32>docker ps
 CONTAINER ID   IMAGE                    COMMAND                  CREATED         STATUS         PORTS                NAMES
 57a97c28f128   jpetazzo/clock           "/bin/sh -c 'while d…"   9 minutes ago   Up 9 minutes                        blissful_goldberg
