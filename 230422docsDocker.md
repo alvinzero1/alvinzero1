@@ -4,6 +4,10 @@ This texts was ref from https://youtu.be/gAGEar5HQoU off  https://docs.docker.co
 
 Pre: Installed `Docker Desktop` and login to `hub.docker.com`
 
+* [docker/getting-started](#dockergetting-started)
+* [Command Line](#command-line)
+* [docker run](#docker-run)
+
 #### `wsl --update`
 if alert to update newer WSL kernel version.
 ``` console
@@ -14,7 +18,8 @@ C:\Users\AlvinNg>wsl --update
 Installing: Windows Subsystem for Linux
 Windows Subsystem for Linux has been installed.
 ```
-### docker/getting-started
+
+## docker/getting-started
 google> dockerhub getting-started
 #### docker run -d -p 80:80 docker/getting-started
 ``` console
@@ -49,6 +54,7 @@ Digest: sha256:a1aff3e01bb667ededb2e4d895a1f1f88b7d329bd22402d4a5ba5e7f1c7a48cb
 Status: Downloaded newer image for fedora:latest
 docker.io/library/fedora:latest
 ```
+
 ### docker --help
 ``` console
 C:\Users\AlvinNg\zero1Wk32>docker --help
@@ -173,6 +179,7 @@ bash: figlet: command not found
 [root@5a5627010e43 /]# exit
 ```
 
+
 ## Command Line
 ### docker run -d *jpetazzo/clock*
 To run in detach mode. See that the ID also in the container
@@ -262,4 +269,218 @@ Sat Apr 22 16:04:06 UTC 2023
 C:\Users\AlvinNg\zero1Wk32>
 ```
 
---- 
+
+## docker run
+### code .
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32
+$ cd figlet
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ ls
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ touch Dockerfile
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ code .
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$
+```
+
+### Dockerfile
+auto open from VSCode
+``` txt
+FROM fedora
+RUN yum install -y figlet
+```
+
+### docker build --help
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker build --help
+
+...
+  -t, --tag list                Name and optionally a tag in the
+                                'name:tag' format
+...
+```
+### dot `.`
+#### docker build -t figlet .
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker build -t figlet . [this text remove thereafter]
+
+[+] Building 0.1s (2/2) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.2s
+ => => transferring dockerfile: 2B                                                                                 0.1s
+ => CANCELED [internal] load .dockerignore                                                                         0.1s
+ => => transferring context:                                                                                       0.0s
+failed to solve with frontend dockerfile.v0: failed to read dockerfile: open /var/lib/docker/tmp/buildkit-mount2163944216/Dockerfile: no such file or directory
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+[+] Building 84.2s (6/6) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 75B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/fedora:latest                                                   0.0s
+ => [1/2] FROM docker.io/library/fedora                                                                            0.0s
+ => [2/2] RUN yum install -y figlet                                                                               83.0s
+ => exporting to image                                                                                             1.1s
+ => => exporting layers                                                                                            1.1s
+ => => writing image sha256:bb19f57a60021a0ae0393772388971dd7378f672adb6b811f42925ea8a012a0d                       0.0s
+ => => naming to docker.io/library/figlet                                                                          0.0s
+```
+#### docker run -it figlet
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run -it figlet
+[root@3ada34e4a61c /]# figlet -f slant hi docker
+    __    _        __           __
+   / /_  (_)  ____/ /___  _____/ /_____  _____
+  / __ \/ /  / __  / __ \/ ___/ //_/ _ \/ ___/
+ / / / / /  / /_/ / /_/ / /__/ ,< /  __/ /
+/_/ /_/_/   \__,_/\____/\___/_/|_|\___/_/
+
+[root@3ada34e4a61c /]# exit
+exit
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ clear
+```
+#### CMD exec
+``` txt
+FROM fedora
+RUN yum install -y figlet
+CMD exec figlet -f slant "Hello World"
+```
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker build -t figlet .
+[+] Building 0.1s (6/6) FINISHED
+ => [internal] load build definition from Dockerfile                             0.1s
+ ...
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run -it figlet
+...
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run figlet
+    __  __     ____         _       __           __    __
+   / / / /__  / / /___     | |     / /___  _____/ /___/ /
+  / /_/ / _ \/ / / __ \    | | /| / / __ \/ ___/ / __  /
+ / __  /  __/ / / /_/ /    | |/ |/ / /_/ / /  / / /_/ /
+/_/ /_/\___/_/_/\____/     |__/|__/\____/_/  /_/\__,_/
+```
+#### ENTRYPOINT [ "figlet" ]
+``` txt
+FROM fedora
+RUN yum install -y figlet
+ENTRYPOINT [ "figlet" ]
+```
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker build -t figlet .
+[+] Building 0.2s (6/6) FINISHED
+ => [internal] load build definition from Dockerfile                             0.1s
+ ...
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run figlet hello
+...
+$ docker run figlet -f slant hello
+...
+$ docker run figlet -f script hello
+ _          _   _
+| |        | | | |
+| |     _  | | | |  __
+|/ \   |/  |/  |/  /  \_
+|   |_/|__/|__/|__/\__/
+
+
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run figlet [<<< this may cause problem]
+```
+#### ENTRYPOINT ... CMD
+``` txt
+FROM fedora
+RUN yum install -y figlet
+ENTRYPOINT [ "figlet" ]
+CMD ["Hello Docker!"]
+```
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker build -t figlet .
+[+] Building 0.4s (6/6) FINISHED
+ ...
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run figlet hi Everyone
+...
+$ docker run figlet
+ _   _      _ _         ____             _             _
+| | | | ___| | | ___   |  _ \  ___   ___| | _____ _ __| |
+| |_| |/ _ \ | |/ _ \  | | | |/ _ \ / __| |/ / _ \ '__| |
+|  _  |  __/ | | (_) | | |_| | (_) | (__|   <  __/ |  |_|
+|_| |_|\___|_|_|\___/  |____/ \___/ \___|_|\_\___|_|  (_)
+
+```
+
+### push to DockerHub
+[1:04:00] To push to DockerHub. Build with ID
+#### docker build -t `zero1alvin/figlet`:latest .
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker build -t zero1alvin/figlet:latest .
+[+] Building 0.4s (6/6) FINISHED
+ => [internal] load build definition from Dockerfile                             0.1s
+ => => transferring dockerfile: 31B                                              0.0s
+ => [internal] load .dockerignore                                                0.1s
+ => => transferring context: 2B                                                  0.1s
+ => [internal] load metadata for docker.io/library/fedora:latest                 0.0s
+ => [1/2] FROM docker.io/library/fedora                                          0.0s
+ => CACHED [2/2] RUN yum install -y figlet                                       0.0s
+ => exporting to image                                                           0.0s
+ => => exporting layers                                                          0.0s
+ => => writing image sha256:988208f0234a0dc1a44cb1ab9b4ecb64cbab30365ae7016dde0  0.0s
+ => => naming to docker.io/zero1alvin/figlet:latest                              0.0s
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$
+```
+- Shown in container
+- Shown in DockerHub
+- Right-click 3-dots to push to DockerHub
+- Checked that `zero1alvin/figlet` is in Dockerhub
+- For testing, I delete existing in the container, and `rm -rf figlet/`
+- From Dockerhub > `Public View`
+- `docker pull zero1alvin/figlet`
+
+``` console
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker pull zero1alvin/figlet
+Using default tag: latest
+latest: Pulling from zero1alvin/figlet
+Digest: sha256:7d40e18aba6674a7f787a266efd3ba65b68ab5493b5ff758a32972dc675ee35c
+Status: Downloaded newer image for zero1alvin/figlet:latest
+docker.io/zero1alvin/figlet:latest
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run zero1alvin/figlet Good luck us
+  ____                 _   _            _
+ / ___| ___   ___   __| | | |_   _  ___| | __  _   _ ___
+| |  _ / _ \ / _ \ / _` | | | | | |/ __| |/ / | | | / __|
+| |_| | (_) | (_) | (_| | | | |_| | (__|   <  | |_| \__ \
+ \____|\___/ \___/ \__,_| |_|\__,_|\___|_|\_\  \__,_|___/
+
+
+AzureAD+AlvinNg@LAPTOP-OJGI6SOT MINGW64 ~/zero1Wk32/figlet
+$ docker run zero1alvin/figlet
+ _   _      _ _         ____             _             _
+| | | | ___| | | ___   |  _ \  ___   ___| | _____ _ __| |
+| |_| |/ _ \ | |/ _ \  | | | |/ _ \ / __| |/ / _ \ '__| |
+|  _  |  __/ | | (_) | | |_| | (_) | (__|   <  __/ |  |_|
+|_| |_|\___|_|_|\___/  |____/ \___/ \___|_|\_\___|_|  (_)
+```
+
+
+---
